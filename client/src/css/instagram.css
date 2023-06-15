@@ -1,0 +1,32 @@
+#logoInstagram {
+  width: 120px;
+  height: 50px;
+}
+
+.logo {
+  width: 130px;
+}
+
+#sidebar {
+  padding-top: 10px;
+}
+.flexSideBar {
+  width: 205x;
+  height: 40px;
+  align-items: center;
+  gap: 20px;
+}
+
+.flexSideBar div {
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.card {
+  margin: 1px;
+}
+
+.card img {
+  object-fit: cover; /* Memastikan gambar terisi penuh pada div */
+}

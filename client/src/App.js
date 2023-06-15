@@ -1,24 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import { Center, Spinner } from "@chakra-ui/react";
+import "./App.css";
+import { useEffect, useState } from "react";
+import { Routes } from "react-router-dom";
+import routes from "./routes/Routes";
 
 function App() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(setLoading(false));
+      }, 1000);
+    });
+  }, [loading]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {loading ? (
+        <Center h={"100vh"}>
+          <Spinner />
+        </Center>
+      ) : (
+        <Routes>{routes.map((val) => val)}</Routes>
+      )}
+    </>
   );
 }
 
