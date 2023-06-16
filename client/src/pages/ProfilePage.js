@@ -6,11 +6,13 @@ import TopBar2 from "../components/top2bar";
 export default function ProfilePage() {
   return (
     <>
-      <TopBar2 />
-      <Box paddingTop={"60px"} paddingBottom={"60px"}>
-        <Profile />
-      </Box>
-      <FooterBar />
+      <>
+        <TopBar2 />
+        <Box paddingTop={"60px"} paddingBottom={"30px"}>
+          <Profile />
+        </Box>
+        <FooterBar />
+      </>
     </>
   );
 }

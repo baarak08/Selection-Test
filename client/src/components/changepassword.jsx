@@ -169,7 +169,7 @@ export default function ChangePassword() {
                       <Icon
                         color={"grey"}
                         as={seePassword2 ? AiOutlineEye : AiOutlineEyeInvisible}
-                        W="24px"
+                        w="24px"
                         h="24px"
                         cursor={"pointer"}
                         _hover={{ color: "black" }}

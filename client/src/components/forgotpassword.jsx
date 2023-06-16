@@ -1,8 +1,20 @@
 import { Box, Flex, Center, Image, Input, Button } from "@chakra-ui/react";
 import logo from "../assets/images/Instagram_logo.png";
 import { Link } from "react-router-dom";
+import { api } from "../api/api";
+import { useState } from "react";
 
 export default function ForgotPassword() {
+  const [email, setEmail] = useState("");
+  async function forgotPassword() {
+    await api
+      .get("/auth/generate-token/email", {
+        params: {
+          email,
+        },
+      })
+      .then((res) => alert(res.data.message));
+  }
   return (
     <>
       <Center>
@@ -30,8 +42,17 @@ export default function ForgotPassword() {
                   placeholder="Input your email"
                   textAlign={"center"}
                   borderRadius={"5px"}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
                 ></Input>
-                <Button w={"270px"} h={"32px"} bg={"#4cb5f9"} color={"white"}>
+                <Button
+                  w={"270px"}
+                  h={"32px"}
+                  bg={"#4cb5f9"}
+                  color={"white"}
+                  onClick={forgotPassword}
+                >
                   Send Confirmation Link
                 </Button>
                 <Center
@@ -43,6 +64,7 @@ export default function ForgotPassword() {
                   fontSize={"14px"}
                 >
                   <Link
+                    to="/register"
                     height={"38px"}
                     w={"100%"}
                     paddingTop={"7px"}

@@ -17,7 +17,7 @@ import "../css/instagram.css";
 export default function TopBar2() {
   return (
     <>
-      <Flex justifyContent={"center"} maxW={"100vw"}>
+      <Flex justifyContent={"center"}>
         <Flex
           maxW={"100vw"}
           w={"470px"}

@@ -10,7 +10,8 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import logo from "../assets/images/Instagram_logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 import { AiOutlineEyeInvisible } from "react-icons/ai";
 import { AiOutlineEye } from "react-icons/ai";
@@ -20,6 +21,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import YupPassword from "yup-password";
 import { useEffect, useState } from "react";
+import { api } from "../api/api";
 
 export default function Register() {
   YupPassword(Yup);
@@ -48,46 +50,59 @@ export default function Register() {
         .required("you need to enter a password")
         .min(8, "your password is too short")
         .minLowercase(1, "atleast there is one lowercase")
-        .minUppercase(1, "atleast there is one lowercase")
+        .minUppercase(1, "atleast there is one uppercase")
         .minNumbers(1, "atleast there is one number")
         .minSymbols(1, "atleast there is one symbol"),
     }),
 
     onSubmit: async () => {
-      // console.log(formik.values);
-      const { email, fullName, userName, password } = formik.values;
-      const account = { email, fullName, userName, password };
-      //   account.birthdate = new Date(year, month, day);
+      const { fullname, userName, email, password } = formik.values;
+      const user = { fullname, userName, email, password };
 
-      // const checkEmail = await axios
-      //   .get("http://localhost:2000/user", {
-      //     params: { email: account.email },
-      //   })
-      //   .then((res) => {
-      //     if (res.data.length) {
-      //       return true;
-      //     } else {
-      //       return false;
-      //     }
-      //   });
+      console.log(`ini ${formik.values}`);
 
-      // if (checkEmail) {
-      //   return alert("email already used");
-      // } else {
-      //   await axios.post("http://localhost:2000/user", account).then((res) => {
-      //     nav("/login");
-      //   });
-      // }
-      // console.log(account);
+      const checkUsername = await api
+        .get("/auth/username", {
+          params: { userName: userName },
+        })
+        .then((result) => {
+          console.log(`ini result ${result}`);
+          if (result.data.length) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+      const checkEmail = await api
+        .get("/auth/email", {
+          params: { email: email },
+        })
+        .then((result) => {
+          console.log(result);
+          if (result.data.length) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+      console.log(checkUsername);
+      if (checkUsername || checkEmail) {
+        return alert("email or username already exist");
+      } else {
+        await api.post("/auth/", user).then((res) => {
+          alert("account successfully created");
+          nav("/login");
+        });
+      }
     },
   });
-
   function inputHandler(event) {
     const { value, id } = event.target;
+    console.log({ id, value });
     formik.setFieldValue(id, value);
-    console.log(value);
   }
 
+  const nav = useNavigate();
   const [seePassword, setSeePassword] = useState(false);
 
   const [account, setAccount] = useState({
@@ -198,7 +213,7 @@ export default function Register() {
                       <Icon
                         color={"grey"}
                         as={seePassword ? AiOutlineEye : AiOutlineEyeInvisible}
-                        W="24px"
+                        w="24px"
                         h="24px"
                         cursor={"pointer"}
                         _hover={{ color: "black" }}
@@ -248,9 +263,26 @@ export default function Register() {
                     Cookies Policy .
                   </Flex>
                 </Center>
-                <Button w={"270px"} h={"32px"} bg={"#4cb5f9"} color={"white"}>
+                <Button
+                  w={"270px"}
+                  h={"32px"}
+                  bg={"#4cb5f9"}
+                  color={"white"}
+                  onClick={formik.handleSubmit}
+                >
                   Sign Up
                 </Button>
+                <Center
+                  flexDir={"column"}
+                  w={"270px"}
+                  h={"80px"}
+                  color={"grey"}
+                  fontSize={"10px"}
+                >
+                  <Link to="/login" height={"38px"} w={"100%"} color={"grey"}>
+                    log-in ?
+                  </Link>
+                </Center>
               </Flex>
             </Center>
           </Flex>

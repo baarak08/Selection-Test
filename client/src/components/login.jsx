@@ -10,74 +10,47 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import logo from "../assets/images/Instagram_logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { AiOutlineEyeInvisible } from "react-icons/ai";
 import { AiOutlineEye } from "react-icons/ai";
-import { TbAlertCircleFilled } from "react-icons/tb";
 
-import * as Yup from "yup";
-import { useFormik } from "formik";
-import YupPassword from "yup-password";
 import { useEffect, useState } from "react";
+import { api } from "../api/api";
+import { useDispatch } from "react-redux";
 
-export default function Register() {
-  YupPassword(Yup);
-  const formik = useFormik({
-    initialValues: {
-      usernameOrEmail: "",
-      password: "",
-    },
-    validationSchema: Yup.object().shape({
-      usernameOrEmail: Yup.string()
-        .required("You need to enter your username or email.")
-        .test("usernameOrEmail", "Invalid username or email", function (value) {
-          // Validasi jika value adalah email
-          if (Yup.string().email().isValidSync(value)) {
-            return true;
-          }
-          // Validasi jika value adalah username
-          return /^[A-Za-z0-9_.]+$/.test(value);
-        }),
-      password: Yup.string()
-        .required("You need to enter a password.")
-        .min(8, "Your password is too short."),
-    }),
+export default function Login() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const arr = [];
+  const [added, setAdded] = useState(["lol"]);
 
-    onSubmit: async () => {
-      // console.log(formik.values);
-      const { email, fullName, userName, password } = formik.values;
-      const account = { email, fullName, userName, password };
-      //   account.birthdate = new Date(year, month, day);
-
-      // const checkEmail = await axios
-      //   .get("http://localhost:2000/user", {
-      //     params: { email: account.email },
-      //   })
-      //   .then((res) => {
-      //     if (res.data.length) {
-      //       return true;
-      //     } else {
-      //       return false;
-      //     }
-      //   });
-
-      // if (checkEmail) {
-      //   return alert("email already used");
-      // } else {
-      //   await axios.post("http://localhost:2000/user", account).then((res) => {
-      //     nav("/login");
-      //   });
-      // }
-      // console.log(account);
-    },
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
   });
 
-  function inputHandler(event) {
-    const { value, id } = event.target;
-    formik.setFieldValue(id, value);
-    console.log(value);
+  function inputHandler(input) {
+    const { value, id } = input.target;
+    const tempobject = { ...user };
+    tempobject[id] = value;
+    setUser(tempobject);
+    console.log(tempobject);
   }
+
+  const login = async () => {
+    try {
+      let token;
+      await api.post("/auth/v1", user).then((res) => {
+        localStorage.setItem("auth", JSON.stringify(res.data.token));
+        token = res.data.token;
+        alert("you are sucessfully logged in");
+        navigate("/home");
+      });
+    } catch (err) {
+      return alert("email or password wrong");
+    }
+  };
 
   const [seePassword, setSeePassword] = useState(false);
 
@@ -105,25 +78,14 @@ export default function Register() {
               >
                 <Flex flexDir={"column "}>
                   <Input
-                    id="usernameOrEmail"
+                    id="email"
                     w={"270px"}
                     h={"38px"}
                     padding={"0px 10px"}
-                    placeholder="Username or Email"
+                    placeholder="Email"
                     borderRadius={"5px"}
                     onChange={inputHandler}
                   />
-                  <Flex
-                    color={"#d41b2d"}
-                    fontWeight={"light"}
-                    fontSize={"10px"}
-                    display={formik.errors.usernameOrEmail ? "flex" : "none"}
-                  >
-                    <Center>
-                      <Icon as={TbAlertCircleFilled} w={"10px"} h={"10px"} />
-                    </Center>
-                    {formik.errors.usernameOrEmail}
-                  </Flex>
                 </Flex>
 
                 <Flex flexDir={"column"}>
@@ -150,21 +112,14 @@ export default function Register() {
                       ></Icon>
                     </InputRightElement>
                   </InputGroup>
-                  {account.password.length < 8 ? (
-                    <Flex
-                      color={"#d41b2d"}
-                      fontWeight={"light"}
-                      fontSize={"10px"}
-                      display={formik.errors.password ? "flex" : "none"}
-                    >
-                      <Center>
-                        <Icon as={TbAlertCircleFilled} w={"10px"} h={"10px"} />
-                      </Center>
-                      {formik.errors.password}
-                    </Flex>
-                  ) : null}
                 </Flex>
-                <Button w={"270px"} h={"32px"} bg={"#4cb5f9"} color={"white"}>
+                <Button
+                  w={"270px"}
+                  h={"32px"}
+                  bg={"#4cb5f9"}
+                  color={"white"}
+                  onClick={login}
+                >
                   Log in
                 </Button>
                 <Center
@@ -176,6 +131,7 @@ export default function Register() {
                   fontSize={"14px"}
                 >
                   <Link
+                    to="/register"
                     height={"38px"}
                     w={"100%"}
                     paddingTop={"7px"}
@@ -184,6 +140,7 @@ export default function Register() {
                     don't have account?
                   </Link>
                   <Link
+                    to="/forgot-password"
                     height={"38px"}
                     w={"100%"}
                     paddingTop={"7px"}

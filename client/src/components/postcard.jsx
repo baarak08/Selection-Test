@@ -44,7 +44,7 @@ export default function PostCard() {
             <Flex gap={"10px"}>
               <Avatar w={"32px"} h={"32px"}></Avatar>
               <Flex fontSize={"14px"} fontWeight={"600"} alignItems={"center"}>
-                garasuryanegara
+                baarak08
               </Flex>
             </Flex>
             <Center w={"40px"} h={"40px"}>
@@ -92,7 +92,7 @@ export default function PostCard() {
               147 likes
             </Flex>
             <Flex fontSize={"14px"} gap={"5px"} paddingTop={"10px"} w={"100%"}>
-              <Box fontWeight={"500"}>garasuryanegara</Box>
+              <Box fontWeight={"500"}>baarak08</Box>
               <Box>Porsche 911 RWB</Box>
             </Flex>
             <Flex
